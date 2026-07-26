@@ -1,8 +1,26 @@
 aid: evolv
 name: Evolv
-description: Evolv is a company surfaced as a portfolio company of general-catalyst, lightspeed-venture-partners
-  and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the
-  enrichment pipeline.
+description: >-
+  Evolv AI (formerly Sentient Ascend) is an experience optimization and autonomous
+  experimentation platform that continuously tests and personalizes digital experiences
+  using machine learning. Its Participant API and official client SDKs for JavaScript,
+  iOS, Android, PHP and React allocate visitors to experiment variants, deliver optimized
+  configurations, and ingest behavioral events so AI-driven optimization can evolve web
+  and app experiences without manual A/B-test management. Enterprises use Evolv AI to
+  automate conversion-rate optimization and personalization across their digital properties.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://evolv.ai/favicon.ico
 url: https://raw.githubusercontent.com/api-evangelist/evolv/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,12 +31,78 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
+- Experimentation
+- Optimization
+- Personalization
+- A/B Testing
+- Machine Learning
+- Conversion Rate Optimization
+- Experience Optimization
+- Analytics
 - Company
-apis: []
+apis:
+- name: Evolv Participant API
+  description: >-
+    The Evolv Participant API is the runtime edge API the client SDKs call to fetch a
+    participant's experiment configuration and allocations for an environment, and to
+    ingest context and behavioral events (the "beacon"/data endpoint). Requests are keyed
+    by a public environment id and a participant uid; the API is versioned in the URL path
+    (v1). Documented as a public Postman collection at developers.evolv.ai.
+  humanURL: https://developers.evolv.ai/
+  baseURL: https://participants.evolv.ai
+  tags:
+  - Experimentation
+  - Optimization
+  - Personalization
+  properties:
+  - type: APIReference
+    url: https://developers.evolv.ai/
+  - type: Postman
+    url: https://developers.evolv.ai/
+  - type: SDK
+    url: https://media.evolv.ai/javascript-sdk/releases/latest/docs/EvolvClient.html
+common:
+- type: Website
+  url: https://www.evolv.ai
+- type: DeveloperPortal
+  url: https://developers.evolv.ai/
+- type: Documentation
+  url: https://developers.evolv.ai/
+- type: GitHubOrganization
+  url: https://github.com/evolv-ai
+- type: SDKs
+  url: packages/evolv-packages.yml
+- type: Packages
+  url: packages/evolv-packages.yml
+- type: CLI
+  url: cli/evolv-cli.yml
+- type: Authentication
+  url: authentication/evolv-authentication.yml
+- type: Sandbox
+  url: sandbox/evolv-sandbox.yml
+- type: Conventions
+  url: conventions/evolv-conventions.yml
+- type: Lifecycle
+  url: lifecycle/evolv-lifecycle.yml
+- type: ChangeLog
+  url: changelog/evolv-changelog.yml
+- type: MCPServer
+  url: mcp/evolv-mcp.yml
+- type: Conformance
+  url: conformance/evolv-conformance.yml
+- type: LLMsTxt
+  url: llms/evolv-llms.txt
+- type: DomainSecurity
+  url: security/evolv-domain-security.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

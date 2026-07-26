@@ -1,0 +1,27 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: >-
+  Derived from the Evolv Participant API operations exposed by the official SDKs
+  (evolv-ai/javascript-sdk, evolv-ai/android-sdk). No official hosted Evolv MCP server
+  was located.
+server:
+  name: evolv
+  transport: http
+  url: null
+tools:
+- name: get_configuration
+  description: Fetch the experiment/variant configuration for a participant in an environment.
+  source_operation: "GET https://participants.evolv.ai/v1/{environment}/{uid}/configuration.json"
+- name: get_allocations
+  description: Fetch a participant's experiment allocations.
+  source_operation: "GET https://participants.evolv.ai/v1/{environment}/{uid}/{eid}/allocations"
+- name: submit_events
+  description: >-
+    Ingest participant context, confirmations, contaminations and behavioral events via
+    the beacon/data endpoint.
+  source_operation: "POST https://participants.evolv.ai/v1/{environment}/data"
+notes: >-
+  Candidate tool list only — a starting point for wrapping the Participant API as MCP.
+  Not an Evolv-published server. No OpenAPI is available, so tools are grounded in the
+  documented SDK request surface rather than operationIds.

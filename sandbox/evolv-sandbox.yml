@@ -1,0 +1,25 @@
+generated: '2026-07-19'
+method: searched
+source: evolv-ai/android-sdk EvolvConfig.java (PROD_DOMAIN / TEST_DOMAIN constants)
+environments:
+- mode: production
+  domain: participants.evolv.ai
+  endpoint: https://participants.evolv.ai/v1
+  description: Production Participant API host used by default across all Evolv SDKs.
+- mode: staging
+  domain: participants-stg.evolv.ai
+  endpoint: https://participants-stg.evolv.ai/v1
+  description: >-
+    Staging/test Participant API host (TEST_DOMAIN in the SDK config). SDKs can be
+    pointed at this host to exercise experiment allocation and event ingestion against a
+    non-production environment.
+selection:
+  how: >-
+    The target host is selected by SDK configuration — override the endpoint/domain to the
+    staging host, and use a test/staging environment id for the project. Evolv does not
+    publish magic test identifiers or test cards (it is not a payments API); test isolation
+    is achieved via a separate environment id and the staging host.
+notes: >-
+  No published test cards / hosted test tokens apply to this domain. Values above are the
+  real host constants shipped verbatim in the official Evolv SDKs; no test values were
+  invented.

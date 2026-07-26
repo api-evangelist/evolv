@@ -1,0 +1,23 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Evolv SDK source (default version constants) + github.com/evolv-ai release history
+versioning:
+  scheme: uri-path
+  current: v1
+  detail: >-
+    The Participant API is versioned as a URL path segment (/v1/...); the default version
+    across the JavaScript, Android, iOS and PHP SDKs is 1.
+deprecation:
+  policy_url: null
+  sunset_header: null
+  detail: No public deprecation/Sunset (RFC 8594) policy was located.
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+notes: >-
+  No dedicated status page was located (status.evolv.ai does not resolve). No StatusPage or
+  Deprecation pointer is emitted because neither surface was verified. SDK release cadence
+  is tracked in changelog/evolv-changelog.yml.
+deprecated_operations: []

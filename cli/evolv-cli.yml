@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/evolv-ai/experiment-management-cli
+cli:
+  name: Evolv Experiment Management CLI
+  language: python
+  repository: https://github.com/evolv-ai/experiment-management-cli
+  description: >-
+    First-party command-line tool used for Evolv experiment management — managing the
+    lifecycle of experiments/projects on the Evolv AI optimization platform.
+  install:
+  - method: source
+    command: git clone https://github.com/evolv-ai/experiment-management-cli
+  surface:
+  - group: experiments
+    purpose: Manage Evolv experiments/projects (create, list, update lifecycle state).
+  notes: >-
+    Distributed via the GitHub repository (no published PyPI package located). The CLI
+    binary itself is catalogued in packages/evolv-packages.yml; this file captures its
+    command surface.

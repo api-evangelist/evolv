@@ -1,0 +1,55 @@
+generated: '2026-07-19'
+method: derived
+source: >-
+  Evolv SDK source (evolv-ai/javascript-sdk, evolv-ai/android-sdk) + developers.evolv.ai
+  Participant API reference
+conventions:
+  authentication:
+    style: public-environment-id
+    detail: >-
+      Requests are scoped by a public environment id and a participant uid carried in the
+      URL path; no bearer token or OAuth. See authentication/evolv-authentication.yml.
+  versioning:
+    style: uri-path
+    current: v1
+    detail: The API version is a path segment (/v1/...). Default version in all SDKs is 1.
+  transport:
+    protocol: https
+    default_host: participants.evolv.ai
+    formats:
+    - application/json
+  request_shape:
+    configuration:
+      method: GET
+      path: /v1/{environment}/{uid}/configuration.json
+      purpose: Fetch the experiment/variant configuration for a participant.
+    allocations:
+      method: GET
+      path: /v1/{environment}/{uid}/{eid}/allocations
+      purpose: Fetch a participant's experiment allocations.
+    events:
+      method: POST
+      path: /v1/{environment}/data
+      purpose: >-
+        The "beacon"/data endpoint — ingest participant context, confirmations,
+        contaminations, and behavioral events. Fire-and-forget event ingestion.
+  idempotency:
+    supported: false
+    detail: >-
+      No idempotency-key header or contract is documented for the Participant API. Event
+      ingestion is fire-and-forget via the beacon; configuration/allocation reads are safe
+      GETs. No Idempotency pointer is emitted.
+  pagination:
+    supported: false
+    detail: Runtime edge API returns per-participant documents; no list pagination.
+  error_envelope:
+    detail: >-
+      No RFC 9457 problem+json envelope is documented; standard HTTP status codes apply.
+      No OpenAPI is published to derive a structured error catalog, so errors/ is omitted
+      rather than fabricated.
+  rate_limiting:
+    detail: No published rate-limit signaling headers were located.
+cross_links:
+  authentication: authentication/evolv-authentication.yml
+  lifecycle: lifecycle/evolv-lifecycle.yml
+  sandbox: sandbox/evolv-sandbox.yml

@@ -1,0 +1,71 @@
+generated: '2026-07-19'
+method: searched
+source: npm registry (@evolv scope), Packagist, github.com/evolv-ai
+packages:
+- language: javascript
+  registry: npm
+  name: "@evolv/client"
+  url: https://www.npmjs.com/package/@evolv/client
+  install: npm install @evolv/client
+  repository: https://github.com/evolv-ai/javascript-sdk
+  license: Apache-2.0
+  description: The official JavaScript client for the Evolv AI optimization platform.
+  official: true
+- language: javascript
+  registry: npm
+  name: "@evolv/mutate"
+  url: https://www.npmjs.com/package/@evolv/mutate
+  install: npm install @evolv/mutate
+  license: Apache-2.0
+  description: A library of standard DOM mutations by Evolv AI.
+  official: true
+- language: javascript
+  registry: npm
+  name: "@evolv/asset-manager"
+  url: https://www.npmjs.com/package/@evolv/asset-manager
+  install: npm install @evolv/asset-manager
+  repository: https://github.com/evolv-ai/asset-manager
+  license: Apache-2.0
+  description: Manages Evolv distributed assets.
+  official: true
+- language: typescript
+  registry: github
+  name: "@evolv-ai/react-sdks"
+  url: https://github.com/evolv-ai/react-sdks
+  homepage: https://evolv-ai.github.io/react-sdks
+  license: Apache-2.0
+  description: React SDKs for the Evolv AI platform.
+  official: true
+- language: php
+  registry: packagist
+  name: evolv/php-sdk
+  url: https://packagist.org/packages/evolv/php-sdk
+  install: composer require evolv/php-sdk
+  repository: https://github.com/evolv-ai/php-sdk
+  description: SDK for serving projects and experiments from PHP servers.
+  official: true
+- language: swift
+  registry: github
+  name: EvolvKit
+  url: https://github.com/evolv-ai/ios-sdk
+  repository: https://github.com/evolv-ai/ios-sdk
+  description: Evolv SDK for iOS (native Swift applications).
+  official: true
+- language: java
+  registry: github
+  name: ai.evolv android-sdk
+  url: https://github.com/evolv-ai/android-sdk
+  repository: https://github.com/evolv-ai/android-sdk
+  description: Evolv SDK for native Android applications.
+  official: true
+- language: python
+  registry: github
+  name: experiment-management-cli
+  url: https://github.com/evolv-ai/experiment-management-cli
+  repository: https://github.com/evolv-ai/experiment-management-cli
+  description: CLI used for Evolv experiment management.
+  official: true
+notes: >-
+  Additional first-party analytics adapters are published under the @evolv-integrations
+  npm scope (segment, adobe-analytics, google-analytics, ga4, heap, quantum-metric, etc.).
+  No first-party package was found on PyPI (the PyPI "evolv" package is an unrelated project).
