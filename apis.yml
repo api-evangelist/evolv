@@ -31,7 +31,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-19'
+modified: '2026-08-13'
 tags:
 - Experimentation
 - Optimization
@@ -60,9 +60,21 @@ apis:
   - type: APIReference
     url: https://developers.evolv.ai/
   - type: Postman
-    url: https://developers.evolv.ai/
+    url: postman/evolv-participant-api.postman_collection.json
   - type: SDK
     url: https://media.evolv.ai/javascript-sdk/releases/latest/docs/EvolvClient.html
+  - type: ErrorCatalog
+    url: errors/evolv-problem-types.yml
+  - type: DataModel
+    url: data-model/evolv-data-model.yml
+  - type: RateLimits
+    url: rate-limits/evolv-rate-limits.yml
+  - type: Examples
+    url: examples/evolv-configuration-basic-response-example.json
+  - type: Examples
+    url: examples/evolv-allocations-get-participants-allocations-example.json
+  - type: Examples
+    url: examples/evolv-preallocations-basic-response-example.json
 common:
 - type: Website
   url: https://www.evolv.ai
@@ -96,13 +108,31 @@ common:
   url: llms/evolv-llms.txt
 - type: DomainSecurity
   url: security/evolv-domain-security.yml
+- type: Login
+  url: https://app.evolv.ai
+- type: Plans
+  url: plans/evolv-plans-pricing.yml
+- type: AgentSkills
+  url: skills/_index.yml
+- type: AgentSkill
+  url: skills/evolv-allocate-participant.md
+- type: AgentSkill
+  url: skills/evolv-record-events.md
+- type: AgentSkill
+  url: skills/evolv-offline-preallocations.md
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 13
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Found and saved Evolv's own published Postman Collection v2 (7 operations, saved
+    response examples) at developers.evolv.ai — the machine-readable contract earlier
+    rounds had missed. Probed the live Participant API for its real error envelope and
+    header behaviour. Recorded that the evolv.ai marketing site now answers HTTP 401
+    (Squarespace "Private Site") on every path while the API, docs and console stay live.
