@@ -1,13 +1,18 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: >-
-  Evolv SDK source (evolv-ai/javascript-sdk build-options.js, evolv-ai/android-sdk
-  EvolvConfig.java) + developers.evolv.ai Participant API reference
+  Evolv-published Postman collection at developers.evolv.ai
+  (postman/evolv-participant-api.postman_collection.json) + Evolv SDK source
+  (evolv-ai/javascript-sdk build-options.js, evolv-ai/android-sdk EvolvConfig.java) +
+  live probes of https://participants.evolv.ai/v1/...
 summary:
   types:
   - apiKey
+  - http
   api_key_in:
   - path
+  http_schemes:
+  - bearer
   oauth2_flows: []
 schemes:
 - name: environmentId
@@ -15,24 +20,56 @@ schemes:
   in: path
   description: >-
     The Participant API is keyed by a public environment id embedded in the request URL
-    path (https://participants.evolv.ai/v1/{environment}/...). The environment id scopes
-    all configuration, allocation, and event-ingestion requests to a specific Evolv
-    project/environment. It is a publishable (client-side) key delivered in the browser
-    or mobile app snippet.
+    path (https://participants.evolv.ai/v1/{environment_id}/...). The environment id scopes
+    all configuration, allocation, preallocation and event-ingestion requests to a specific
+    Evolv project/environment. It is a publishable (client-side) key delivered in the
+    browser snippet or mobile app SDK config — not a secret.
   sources:
+  - postman/evolv-participant-api.postman_collection.json (every request path is
+    {{root_domain}}/{{participant_api_version}}/{{environment_id}}/...)
   - evolv-ai/android-sdk EvolvConfig.java (DEFAULT_ENDPOINT https://participants.evolv.ai/v1)
 - name: participantUid
   type: apiKey
-  in: path
+  in: query
   description: >-
-    A participant/visitor identifier (uid), and optionally a session id (sid), are passed
-    in the request path to fetch that participant's allocations and to attribute ingested
-    events. Identity is managed by the SDK, not an account credential.
+    A participant/visitor identifier (uid), and optionally a session id (sid), identify the
+    subject of the request. They are carried as query parameters on the GET operations and
+    as form fields on the POST/PATCH operations. Both are minted and persisted by the Evolv
+    SDK (format `<random>_<epoch-millis>`), not issued by Evolv as an account credential —
+    they are identity, not authorization.
   sources:
+  - postman/evolv-participant-api.postman_collection.json
   - evolv-ai/javascript-sdk src/index.js
+- name: bearerToken
+  type: http
+  scheme: bearer
+  in: header
+  status: declared-not-observable
+  description: >-
+    Evolv's own published Postman collection declares collection-level auth of
+    `{"type":"bearer","bearer":{"token":"<token>"}}`, so a bearer token is the intended
+    credential for at least some Participant API usage. No published documentation
+    explains how that token is issued, scoped, rotated or revoked, and no individual
+    operation in the collection overrides or annotates it.
+  observability: >-
+    The declaration could not be confirmed against the live API anonymously. Unauthenticated
+    calls to the routed endpoints return HTTP 404 `{"msg":"Not found"}` rather than 401 or
+    403, so the API does not distinguish "unauthenticated" from "unknown environment" on the
+    wire and enforcement cannot be observed without a real environment id. Recorded as
+    declared by the provider, not as verified by probe.
+  sources:
+  - postman/evolv-participant-api.postman_collection.json (collection `auth` block)
+management_api:
+  status: undocumented
+  detail: >-
+    Authoring and management of experiments happens in the Evolv Manager console
+    (https://app.evolv.ai, HTTP 200, login required) and via the first-party
+    experiment-management-cli, both against an authenticated Evolv account. Evolv publishes
+    no reference for that management surface, so no scheme for it is recorded here.
+docs: https://developers.evolv.ai/
 notes: >-
-  The runtime Participant API uses no OAuth or bearer token — access is by public
-  environment id plus participant uid over HTTPS. Management/authoring of experiments
-  (via the Evolv app and the experiment-management-cli) is performed against the
-  authenticated Evolv account, separate from this runtime edge API. No OpenAPI is
-  published, so this profile is derived from the official SDK source rather than a spec.
+  There is no OAuth, no OpenID Connect, no scope model and no mTLS on the Evolv runtime
+  surface; `scopes/` is therefore correctly absent rather than empty. This profile is built
+  from Evolv's published Postman collection and SDK source because Evolv publishes no
+  OpenAPI. The bearer scheme is recorded exactly as strongly as the evidence supports —
+  declared by Evolv, unverifiable anonymously.

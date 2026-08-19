@@ -1,13 +1,18 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: https://github.com/evolv-ai/experiment-management-cli
+checked: '2026-08-13'
 cli:
   name: Evolv Experiment Management CLI
   language: python
   repository: https://github.com/evolv-ai/experiment-management-cli
+  version: 1.0.3
+  released: '2019-09-13'
   description: >-
     First-party command-line tool used for Evolv experiment management — managing the
-    lifecycle of experiments/projects on the Evolv AI optimization platform.
+    lifecycle of experiments/projects on the Evolv AI optimization platform. It targets the
+    authenticated management surface (the same one behind app.evolv.ai), not the public
+    Participant API.
   install:
   - method: source
     command: git clone https://github.com/evolv-ai/experiment-management-cli
@@ -15,6 +20,23 @@ cli:
   - group: experiments
     purpose: Manage Evolv experiments/projects (create, list, update lifecycle state).
   notes: >-
-    Distributed via the GitHub repository (no published PyPI package located). The CLI
-    binary itself is catalogued in packages/evolv-packages.yml; this file captures its
-    command surface.
+    Distributed from the GitHub repository only — no PyPI project exists
+    (pypi.org/pypi/evolv-experiment-management-cli/json returns 404, and the "evolv" package
+    on PyPI is unrelated), so there is no `pip install` path. The latest release is 1.0.3
+    from 2019-09-13 and the repository's last push was 2021-03-25, making this the oldest
+    surface in Evolv's first-party estate. The binary itself is catalogued in
+    packages/evolv-packages.yml; this file captures its command surface.
+related_tools:
+- name: Evolv web editor
+  repository: https://github.com/evolv-ai/web-editor
+  description: A visual editor for web-based projects using the Evolv platform.
+  note: >-
+    A browser-based authoring tool, not a CLI; recorded here only so it is not mistaken for
+    one. Last pushed 2026-04-02.
+- name: Evolv Chrome extension
+  repository: https://github.com/evolv-ai/chrome-extension
+  note: Browser extension for working with Evolv projects. Last pushed 2025-06-30.
+- name: Evolv scaffold
+  repository: https://github.com/evolv-ai/scaffold
+  description: Scaffolding for developing and building an experiment using rollup.
+  note: A project template, invoked through npm scripts rather than an installed binary.

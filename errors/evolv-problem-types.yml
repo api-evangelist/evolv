@@ -1,0 +1,96 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  Live unauthenticated probes of https://participants.evolv.ai/v1/... plus the saved
+  responses in the Evolv-published Postman collection
+  (postman/evolv-participant-api.postman_collection.json)
+format: custom-json
+media_type: application/json
+rfc9457: false
+envelope:
+  shape: '{"msg": "<human readable message>"}'
+  fields:
+  - name: msg
+    type: string
+    description: >-
+      The only field observed in an Evolv Participant API error body. It carries a short
+      human-readable message. There is no machine-readable code, type URI, trace id, or
+      details array, so an agent has nothing but the HTTP status and this string to branch on.
+  detail: >-
+    The Participant API does not emit RFC 9457 application/problem+json. Error bodies are
+    plain application/json with a single `msg` string. Errors are returned with
+    `access-control-allow-origin: *` and `cache-control: no-cache, no-store,
+    must-revalidate` so browser SDK callers can read them.
+problem_types:
+- status: 404
+  title: Not found
+  body: '{"msg":"Not found"}'
+  media_type: application/json
+  observed: true
+  evidence: >-
+    GET https://participants.evolv.ai/v1/test/allocations -> 404
+    application/json {"msg":"Not found"}  (probed 2026-08-13)
+  meaning: >-
+    Returned when the environment id in the path does not resolve, or the participant/
+    allocation record does not exist. The API does not distinguish an unknown environment
+    from an unknown participant — both collapse to the same 404 body.
+  remediation: >-
+    Verify the environment id segment of the path and that the participant uid has been
+    allocated. Because an invalid environment id and an unallocated participant are
+    indistinguishable, treat 404 as "no configuration available" and fall back to control.
+- status: 500
+  title: Internal server error
+  body: '{"msg":"Internal server error"}'
+  media_type: application/json
+  observed: true
+  evidence: >-
+    GET https://participants.evolv.ai/v1/test/preallocations?count=2 -> 500
+    application/json {"msg":"Internal server error"}  (probed 2026-08-13)
+  meaning: >-
+    The preallocations endpoint returns 500 rather than a 4xx when called with an
+    unknown environment id, so a caller error surfaces as a server error on this route.
+  remediation: >-
+    Do not retry blindly on this route — a 500 here can be a permanent caller error
+    (bad environment id), not a transient fault. Confirm the environment id first.
+- status: 403
+  title: Access Denied
+  body: <Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>
+  media_type: application/xml
+  observed: true
+  evidence: >-
+    GET https://participants.evolv.ai/v1/test/configuration -> 403 application/xml
+    (server: AmazonS3, x-cache: Error from cloudfront)  (probed 2026-08-13)
+  meaning: >-
+    The configuration route is served from an S3 origin behind CloudFront. An unknown or
+    unauthorized environment id leaks the raw S3 AccessDenied XML rather than the JSON
+    `msg` envelope used by the routed endpoints. This is the one place where the error
+    content type changes from JSON to XML.
+  remediation: >-
+    Parse defensively: a client that assumes JSON on every Participant API error will
+    throw here. Branch on Content-Type, not on status alone.
+success_codes:
+- status: 200
+  where: GET allocations, GET preallocations, GET configuration
+  evidence: postman/evolv-participant-api.postman_collection.json saved responses
+- status: 202
+  where: GET/POST/PATCH events
+  detail: >-
+    Event ingestion is accepted asynchronously (fire-and-forget beacon); a 202 means the
+    event was accepted for processing, not that it was recorded.
+  evidence: postman/evolv-participant-api.postman_collection.json saved responses
+- status: 302
+  where: GET events with a `target` query parameter
+  detail: >-
+    "Record An Event And Redirect" records the event then 302s to the `target` URL, so a
+    link click can both convert and navigate.
+  evidence: postman/evolv-participant-api.postman_collection.json saved responses
+gaps:
+- No documented error-code registry or enumerated error catalog.
+- No `type`/`code`/`instance` field — nothing an agent can branch on programmatically.
+- No request/correlation id in the error body (CloudFront's x-amz-cf-id is the only trace handle).
+- 401/403 authentication failures could not be observed anonymously; unauthenticated calls
+  to routed endpoints return 404, not 401.
+notes: >-
+  Derived by observation, not from a published error reference — Evolv publishes no error
+  documentation. Every status and body above was returned by the live production API or is
+  a saved response inside Evolv's own published Postman collection. Nothing here is invented.

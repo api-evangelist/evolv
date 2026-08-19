@@ -1,22 +1,102 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: derived
-source: Evolv SDK source + developers.evolv.ai Participant API reference
+source: >-
+  postman/evolv-participant-api.postman_collection.json + live probes of
+  participants.evolv.ai + security/evolv-domain-security.yml + well-known/evolv-well-known.yml
+checked: '2026-08-13'
 standards:
+- id: openapi
+  conforms: false
+  evidence: >-
+    Evolv publishes no OpenAPI. The machine-readable contract it does publish is a Postman
+    Collection v2 (schema.getpostman.com/json/collection/v2.0.0), served at
+    developers.evolv.ai and saved verbatim in postman/.
+- id: postman-collection-v2
+  conforms: true
+  evidence: >-
+    postman/evolv-participant-api.postman_collection.json — Evolv's own published
+    collection, 7 operations across 4 folders with saved response examples.
 - id: oauth2
   conforms: false
-  evidence: Participant API uses a public environment id in the URL path, no OAuth flows.
+  evidence: >-
+    No OAuth flows. Access is by public environment id in the URL path; the collection
+    declares an undocumented bearer token. /.well-known/oauth-authorization-server 404s or
+    403s on every host.
 - id: oidc
   conforms: false
+  evidence: /.well-known/openid-configuration returns no document on any Evolv host.
 - id: rfc9457-problem-details
   conforms: false
-  evidence: No application/problem+json error envelope documented.
+  evidence: >-
+    Error bodies are application/json {"msg":"..."} with no type/title/status/detail
+    members, and the configuration route returns S3 XML on 403. See
+    errors/evolv-problem-types.yml.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: >-
+    /.well-known/security.txt returns 301->401 (apex), 404 (docs), 403 (API) and an SPA HTML
+    shell (console). See well-known/evolv-well-known.yml.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation headers observed; no deprecation policy published.
+- id: rfc6585-rate-limit
+  conforms: false
+  evidence: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After headers on any observed response, and no
+    published limits. See rate-limits/evolv-rate-limits.yml.
+- id: idempotency-key
+  conforms: false
+  evidence: >-
+    No idempotency key or de-duplication contract on any write operation, including the
+    batch event route. See conventions/evolv-conventions.yml.
 - id: https-tls
   conforms: true
-  evidence: All hosts (www/developers/participants.evolv.ai) serve TLSv1.3; see security/evolv-domain-security.yml.
+  evidence: >-
+    All hosts (evolv.ai, www, developers, participants) serve TLSv1.3. See
+    security/evolv-domain-security.yml.
+- id: hsts
+  conforms: partial
+  evidence: >-
+    developers.evolv.ai sets Strict-Transport-Security with max-age 31536000; www.evolv.ai
+    and participants.evolv.ai do not. The API host — the one that matters most — is the one
+    without it.
+- id: dnssec
+  conforms: false
+  evidence: evolv.ai is not DNSSEC-signed. See security/evolv-domain-security.yml.
+- id: spf-dmarc
+  conforms: true
+  evidence: evolv.ai publishes SPF and DMARC (policy quarantine).
+- id: caa
+  conforms: true
+  evidence: 'evolv.ai publishes CAA records: amazon.com, letsencrypt.org.'
+- id: cors
+  conforms: true
+  evidence: >-
+    Every observed response, including errors, carries access-control-allow-origin:* and
+    access-control-allow-credentials:true — the API is designed for browser callers.
 - id: json
   conforms: true
-  evidence: Participant API returns JSON (configuration.json / allocations / data).
+  evidence: >-
+    Reads return application/json (configuration, allocations, preallocations); writes accept
+    x-www-form-urlencoded and, on the batch route, application/json.
+compliance_program:
+  published: false
+  certifications: []
+  detail: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP claim could be verified. The company's
+    security/trust pages, if they exist, sit on the marketing site, which currently answers
+    HTTP 401 to every path (Squarespace "Private Site"). No trust.evolv.ai host resolves. No
+    Compliance or TrustCenter pointer is emitted, because nothing was verified — this is a
+    recorded absence, not a claim that Evolv holds no certifications.
+  evidence:
+  - url: https://www.evolv.ai/security
+    status: 401
+  - url: https://www.evolv.ai/trust
+    status: 401
+  - url: https://trust.evolv.ai
+    status: 0
+    note: DNS does not resolve.
 notes: >-
-  Derived assertion of cross-cutting standards from the SDK/API surface. No published
-  compliance program (SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP) was located on the
-  public surface (site is behind bot protection), so no Compliance pointer is emitted.
+  Assertions derived from Evolv's own published collection and from live probes on
+  2026-08-13. Where a standard is marked false it means no evidence of conformance was
+  found on the public surface, not that Evolv has asserted non-conformance.

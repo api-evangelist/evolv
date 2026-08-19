@@ -1,23 +1,60 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
 source: https://github.com/evolv-ai/javascript-sdk/releases
+checked: '2026-08-13'
 scheme: semver
 component: "@evolv/client (JavaScript SDK)"
-current_version: 2.12.14
+current_version: 2.12.14-alpha-c62fd33
+current_stable_version: 2.11.1
 notes: >-
-  Evolv publishes no consolidated dated API changelog; the closest public release history
-  is the GitHub Releases feed of the official JavaScript SDK (evolv-ai/javascript-sdk).
-  Recent tags below capture the recent window verbatim from that feed.
+  Evolv publishes no consolidated dated API changelog — there is no /changelog page, and the
+  Participant API reference (a Postman documenter at developers.evolv.ai) carries no release
+  history. The closest public record is the GitHub Releases feed of the official JavaScript
+  SDK. Note the split channel: the newest *stable* release is 2.11.1 from 2024-08-26, and
+  everything since has shipped as an alpha tagged with a commit sha. Dates below are the
+  GitHub `published_at` of each release, verbatim.
 entries:
 - version: 2.12.14-alpha-c62fd33
   date: '2026-03-04'
+  channel: alpha
 - version: 2.12.9-alpha-147d1b4
   date: '2025-07-03'
+  channel: alpha
 - version: 2.12.8-alpha-f1c839d
   date: '2025-05-15'
+  channel: alpha
 - version: 2.12.7-alpha-424f5f3
   date: '2025-05-08'
+  channel: alpha
 - version: 2.12.4-alpha-fbb1810
   date: '2025-03-14'
+  channel: alpha
 - version: 2.12.2-alpha-1f2a982
   date: '2024-10-15'
+  channel: alpha
+- version: 2.11.1
+  date: '2024-08-26'
+  channel: stable
+- version: 2.11.1-alpha-15f213a
+  date: '2024-08-19'
+  channel: alpha
+- version: 2.11.0-alpha-281ddfa
+  date: '2024-06-17'
+  channel: alpha
+- version: 2.10.1
+  date: '2024-03-12'
+  channel: stable
+other_components:
+- component: "@evolv/react (react-sdks)"
+  changelog: https://raw.githubusercontent.com/evolv-ai/react-sdks/main/CHANGELOG.md
+  format: conventional-commits
+  latest_entry: 2.1.0
+  latest_entry_date: '2023-10-19'
+  note: >-
+    The only Evolv repository that keeps a written CHANGELOG.md. It follows Conventional
+    Commits and stops in 2023, even though the repo has tags through v2.1.1.
+gaps:
+- No API-level changelog — the Participant API's own changes are not published anywhere.
+- No release notes on the tags that matter (ios-sdk has tags through 1.2.1 but its newest
+  GitHub Release is 1.0.1 from 2021).
+- No RSS/Atom feed for releases beyond GitHub's own per-repo feed.

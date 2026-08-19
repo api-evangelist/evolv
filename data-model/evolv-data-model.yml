@@ -1,0 +1,201 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  postman/evolv-participant-api.postman_collection.json (Evolv-published collection,
+  request parameters + saved response bodies) and examples/*.json
+summary: >-
+  Entity graph of the Evolv Participant API, derived from the request parameters and saved
+  response payloads in Evolv's own published Postman collection. There is no OpenAPI and no
+  object reference page, so relationships are read from the id-reference fields that appear
+  in the request query strings and response bodies rather than from `$ref` links.
+identifiers:
+  style: opaque-string
+  detail: >-
+    Evolv ids are opaque strings with no type prefix. Experiment and candidate ids are short
+    hex strings (`7e25506c1b`); a candidate id is a compound of an allocation hash and the
+    experiment id joined by a colon (`2c3aefac54a4:7e25506c1b`), which is the one place the
+    id format itself encodes a relationship. Participant and session ids are
+    `<random>_<epoch-millis>` strings minted by the SDK, not by the API
+    (`96109008_1657045713019`).
+entities:
+- name: Environment
+  id_field: environment_id
+  in: path segment
+  description: >-
+    The project/environment an integration reads from. It is the second path segment of
+    every Participant API call (`/v1/{environment_id}/...`) and is a publishable,
+    client-side value embedded in the web snippet or mobile SDK config. It scopes
+    configuration, allocation and event ingestion.
+  relationships:
+  - type: has_many
+    target: Experiment
+    via: _experiments
+    evidence: examples/evolv-configuration-basic-response-example.json
+- name: Experiment
+  id_field: eid
+  aliases:
+  - id
+  description: >-
+    A running optimization/experiment inside an environment. Carries a `sample_rate` and a
+    set of candidates. Appears as `id` inside the configuration document and as `eid`
+    everywhere it is referenced.
+  fields:
+  - id
+  - sample_rate
+  - _candidates
+  relationships:
+  - type: belongs_to
+    target: Environment
+    via: environment_id (path)
+  - type: has_many
+    target: Candidate
+    via: _candidates
+    evidence: examples/evolv-configuration-basic-response-example.json
+  - type: has_many
+    target: Allocation
+    via: eid
+  - type: has_many
+    target: Preallocation
+    via: eid
+- name: Candidate
+  id_field: cid
+  aliases:
+  - id
+  description: >-
+    A variant within an experiment. Carries an `allocation_probability` and the `genome`
+    that is applied when the candidate is served. The `cid` observed on allocations is
+    compound — `<allocation-hash>:<eid>` — so a candidate id resolves back to its experiment
+    without a second lookup.
+  fields:
+  - id
+  - allocation_probability
+  - genome
+  relationships:
+  - type: belongs_to
+    target: Experiment
+    via: eid (embedded as the suffix of cid)
+    evidence: cid "2c3aefac54a4:7e25506c1b" / eid "7e25506c1b" in the collection variables
+  - type: has_one
+    target: Genome
+    via: genome
+- name: Genome
+  description: >-
+    The variant payload itself — a free-form nested object of the configuration values the
+    experiment is mutating. Observed sub-trees are `search` (weighting values), `pages`
+    (per-page mutations keyed by page name, e.g. `all_pages`, `testing_page`) and
+    `algorithms` (feature flags). The genome has no fixed schema; its shape is defined by
+    the customer's own project, which is why no JSON Schema can be published for it.
+  relationships:
+  - type: belongs_to
+    target: Candidate
+    via: genome
+- name: Participant
+  id_field: uid
+  description: >-
+    The visitor being optimized. The uid is minted and persisted by the Evolv SDK, not
+    issued by the API. It is required on every allocation read, allocation write and event.
+  relationships:
+  - type: has_many
+    target: Allocation
+    via: uid
+  - type: has_many
+    target: Session
+    via: sid
+  - type: has_many
+    target: Event
+    via: uid
+- name: Session
+  id_field: sid
+  description: >-
+    An optional visit-scoped identifier that accompanies the uid on allocations and events.
+    Every endpoint that accepts `sid` documents it as optional.
+  relationships:
+  - type: belongs_to
+    target: Participant
+    via: uid
+- name: Allocation
+  description: >-
+    The join record binding a participant to a candidate of an experiment — "which variant
+    is this visitor in". Returned as an array from GET allocations; each element carries
+    `excluded`, `uid`, `sid`, `eid`, `cid` and the resolved `genome`. `excluded: true`
+    marks a participant filtered out by audience rules or throttling.
+  fields:
+  - excluded
+  - uid
+  - sid
+  - eid
+  - cid
+  - genome
+  relationships:
+  - type: belongs_to
+    target: Participant
+    via: uid
+  - type: belongs_to
+    target: Experiment
+    via: eid
+  - type: belongs_to
+    target: Candidate
+    via: cid
+  evidence: examples/evolv-allocations-get-participants-allocations-example.json
+- name: Preallocation
+  description: >-
+    An allocation minted ahead of time for offline/bulk use — the same `eid`/`cid`/`genome`
+    triple as an Allocation but with no participant attached yet. The caller associates it
+    with a user at their own discretion. Requested in bulk with `count`, optionally scoped
+    to one `eid`.
+  fields:
+  - eid
+  - cid
+  - genome
+  relationships:
+  - type: belongs_to
+    target: Experiment
+    via: eid
+  - type: belongs_to
+    target: Candidate
+    via: cid
+  evidence: examples/evolv-preallocations-basic-response-example.json
+- name: Event
+  id_field: null
+  description: >-
+    A behavioral signal attributed to a participant. `type` is free-form, but two values are
+    reserved by the platform: `confirmation` registers the participant as active on an
+    experiment/candidate, and `contamination` excludes them from being counted. `score` is
+    the numeric value of the event. Events can be submitted one at a time (GET or POST) or
+    as a JSON array (PATCH).
+  fields:
+  - type
+  - eid
+  - cid
+  - uid
+  - sid
+  - score
+  - target
+  relationships:
+  - type: belongs_to
+    target: Participant
+    via: uid
+  - type: belongs_to
+    target: Session
+    via: sid
+  - type: belongs_to
+    target: Experiment
+    via: eid
+  - type: belongs_to
+    target: Candidate
+    via: cid
+- name: Configuration
+  description: >-
+    The whole environment document an SDK downloads at boot — `_experiments[]`, each with
+    `_candidates[]` and their genomes. It is the read-side root of the model and is served
+    from an S3/CloudFront origin rather than the routed API.
+  relationships:
+  - type: has_many
+    target: Experiment
+    via: _experiments
+  evidence: examples/evolv-configuration-basic-response-example.json
+render: null
+notes: >-
+  No `subway/` render exists for this provider. Every field and relationship above appears
+  verbatim in Evolv's published Postman collection or in a saved response body from it;
+  nothing was inferred beyond stating the id-reference links those payloads make explicit.

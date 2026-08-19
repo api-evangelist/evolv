@@ -1,23 +1,68 @@
-generated: '2026-07-19'
-method: derived
+generated: '2026-08-13'
+method: probed
 source: >-
-  Evolv SDK source (default version constants) + github.com/evolv-ai release history
+  Live probes of evolv.ai / www.evolv.ai / app.evolv.ai / status.evolv.ai +
+  postman/evolv-participant-api.postman_collection.json + github.com/evolv-ai release history
+checked: '2026-08-13'
 versioning:
   scheme: uri-path
   current: v1
   detail: >-
-    The Participant API is versioned as a URL path segment (/v1/...); the default version
-    across the JavaScript, Android, iOS and PHP SDKs is 1.
+    The Participant API is versioned as a URL path segment (/v1/...), carried as the
+    {{participant_api_version}} variable in Evolv's published collection. The default
+    version across the JavaScript, React, iOS, Android and PHP SDKs is 1. Only one version
+    has ever been published; there is no v2, no dated version, and no version negotiation
+    header.
 deprecation:
   policy_url: null
-  sunset_header: null
-  detail: No public deprecation/Sunset (RFC 8594) policy was located.
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No public deprecation or Sunset policy (RFC 8594) was located, and no Sunset or
+    Deprecation response header was observed on any live endpoint. No Deprecation pointer is
+    emitted.
 sla:
   url: null
   uptime_target: null
-status_page: null
-notes: >-
-  No dedicated status page was located (status.evolv.ai does not resolve). No StatusPage or
-  Deprecation pointer is emitted because neither surface was verified. SDK release cadence
-  is tracked in changelog/evolv-changelog.yml.
+  detail: No published SLA or uptime commitment was located.
+status_page:
+  url: null
+  detail: >-
+    No status page exists. status.evolv.ai does not resolve in DNS, and no third-party
+    status host (statuspage.io, status.io, instatus) is referenced from any Evolv surface
+    that is currently readable. No StatusPage pointer is emitted.
+platform_state:
+  api: live
+  api_evidence: >-
+    https://participants.evolv.ai/v1/test/allocations returns 404 application/json
+    {"msg":"Not found"} with CORS headers — a real routed API response, not an origin error.
+  console: live
+  console_evidence: 'https://app.evolv.ai/ returns HTTP 200 (Evolv Manager, login required).'
+  docs: live
+  docs_evidence: >-
+    https://developers.evolv.ai/ returns HTTP 200 and serves Evolv's published Postman
+    collection (461304-d0fb7a20-1216-4418-b692-ff7630020b34).
+  marketing_site: locked
+  marketing_site_evidence: >-
+    https://www.evolv.ai/ and https://evolv.ai/ return HTTP 401 with a Squarespace "Private
+    Site" password lock screen, on every path including /pricing, /terms, /privacy, /contact
+    and /robots.txt. www 301s to the apex, which then 401s.
+  github: active
+  github_evidence: >-
+    github.com/evolv-ai has 28 public repositories with pushes as recent as 2026-06-05
+    (github-actions), 2026-04-10 (javascript-sdk) and 2026-02-26 (php-sdk); none is archived.
+  assessment: >-
+    The product is running and the engineering organisation is active, but the company's
+    public front door is currently closed. That combination is why no Pricing,
+    TermsOfService, PrivacyPolicy, Blog, Support or Roadmap pointer can be emitted for this
+    provider: the pages may well exist, but nothing anonymous can reach them today.
+release_cadence:
+  detail: >-
+    Stable releases have stalled while alpha releases continue — @evolv/client's npm
+    `latest` tag has not moved since 2024-08-26 and all newer builds ship on `next`. See
+    changelog/evolv-changelog.yml and packages/evolv-packages.yml.
 deprecated_operations: []
+notes: >-
+  Every state above was established by probe on 2026-08-13, with the exact host and status
+  recorded. Nothing is asserted about Evolv's commercial status; only about what its public
+  surface returns.

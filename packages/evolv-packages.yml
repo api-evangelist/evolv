@@ -1,6 +1,9 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: searched
-source: npm registry (@evolv scope), Packagist, github.com/evolv-ai
+source: >-
+  registry.npmjs.org (@evolv and @evolv-integrations scopes), data.jsdelivr.com,
+  repo.packagist.org, api.github.com/orgs/evolv-ai
+checked: '2026-08-13'
 packages:
 - language: javascript
   registry: npm
@@ -11,6 +14,16 @@ packages:
   license: Apache-2.0
   description: The official JavaScript client for the Evolv AI optimization platform.
   official: true
+  version: 2.11.1
+  published: '2024-08-26'
+  prerelease_version: 2.12.14-alpha-c62fd33
+  prerelease_published: '2026-03-04'
+  note: >-
+    The flagship SDK. `dist-tags.latest` has not moved since 2024-08-26 — every release
+    since then has shipped only to the `next` tag as an alpha (2.12.x-alpha-<sha>), most
+    recently 2.12.14-alpha-c62fd33 on 2026-03-04. A consumer running `npm install
+    @evolv/client` today gets a build that is two years old, while the code Evolv is
+    actually iterating on is only reachable by opting into a prerelease tag.
 - language: javascript
   registry: npm
   name: "@evolv/mutate"
@@ -19,6 +32,8 @@ packages:
   license: Apache-2.0
   description: A library of standard DOM mutations by Evolv AI.
   official: true
+  version: 2.7.1
+  published: '2025-12-10'
 - language: javascript
   registry: npm
   name: "@evolv/asset-manager"
@@ -28,14 +43,24 @@ packages:
   license: Apache-2.0
   description: Manages Evolv distributed assets.
   official: true
-- language: typescript
-  registry: github
-  name: "@evolv-ai/react-sdks"
-  url: https://github.com/evolv-ai/react-sdks
+  version: 1.40.4
+  published: '2025-10-31'
+- language: javascript
+  registry: npm
+  name: "@evolv/react"
+  url: https://www.npmjs.com/package/@evolv/react
+  install: npm install @evolv/react
+  repository: https://github.com/evolv-ai/react-sdks
   homepage: https://evolv-ai.github.io/react-sdks
   license: Apache-2.0
-  description: React SDKs for the Evolv AI platform.
+  description: React SDK for the Evolv AI Platform.
   official: true
+  version: 1.2.0
+  published: '2023-10-19'
+  note: >-
+    Published on npm as @evolv/react even though the repository is named react-sdks and its
+    own CHANGELOG tracks a 2.x line (latest repo tag v2.1.1). The registry and the repo
+    disagree about the current major version.
 - language: php
   registry: packagist
   name: evolv/php-sdk
@@ -44,6 +69,12 @@ packages:
   repository: https://github.com/evolv-ai/php-sdk
   description: SDK for serving projects and experiments from PHP servers.
   official: true
+  version: 1.0.5
+  published: '2022-12-13'
+  note: >-
+    Last published release is from 2022, though the repository itself received commits as
+    recently as 2026-02-26 — the fixes exist in git but have never been tagged or released
+    to Packagist.
 - language: swift
   registry: github
   name: EvolvKit
@@ -51,6 +82,13 @@ packages:
   repository: https://github.com/evolv-ai/ios-sdk
   description: Evolv SDK for iOS (native Swift applications).
   official: true
+  version: 1.2.1
+  published: '2025-08-02'
+  note: >-
+    Distributed from the GitHub repository (CocoaPods/SPM by tag); no package-registry
+    metadata endpoint answers for it, so version and date are read from the latest git tag
+    and its commit date. The latest GitHub *Release* is much older (1.0.1, 2021-10-13) —
+    tags have moved on without release notes.
 - language: java
   registry: github
   name: ai.evolv android-sdk
@@ -58,6 +96,13 @@ packages:
   repository: https://github.com/evolv-ai/android-sdk
   description: Evolv SDK for native Android applications.
   official: true
+  version: null
+  published: null
+  note: >-
+    Checked and nothing to record: the repository carries no git tags and no GitHub
+    releases, and no Maven Central / Google Maven coordinate for `ai.evolv` was located. A
+    consumer has no versioned artifact to depend on — only the default branch, whose last
+    commit is dated 2024-03-08.
 - language: python
   registry: github
   name: experiment-management-cli
@@ -65,7 +110,72 @@ packages:
   repository: https://github.com/evolv-ai/experiment-management-cli
   description: CLI used for Evolv experiment management.
   official: true
+  version: 1.0.3
+  published: '2019-09-13'
+  note: >-
+    Source-install only. pypi.org has no matching first-party project (404); the "evolv"
+    package on PyPI is an unrelated project. Last release is from 2019.
+- language: javascript
+  registry: npm
+  name: "@evolv-integrations/segment"
+  url: https://www.npmjs.com/package/@evolv-integrations/segment
+  license: Apache-2.0
+  description: Evolv integration code for Segment.
+  official: true
+  version: 1.2.0
+  published: '2023-03-01'
+- language: javascript
+  registry: npm
+  name: "@evolv-integrations/adobe-analytics"
+  url: https://www.npmjs.com/package/@evolv-integrations/adobe-analytics
+  license: Apache-2.0
+  description: Evolv integration code for Adobe Analytics.
+  official: true
+  version: 1.2.0
+  published: '2023-03-01'
+- language: javascript
+  registry: npm
+  name: "@evolv-integrations/heap"
+  url: https://www.npmjs.com/package/@evolv-integrations/heap
+  license: Apache-2.0
+  description: Evolv integration code for Heap.
+  official: true
+  version: 1.1.2
+  published: '2023-03-03'
+- language: javascript
+  registry: npm
+  name: "@evolv-integrations/quantum-metric"
+  url: https://www.npmjs.com/package/@evolv-integrations/quantum-metric
+  license: Apache-2.0
+  description: Evolv integration code for Quantum Metric.
+  official: true
+  version: 1.1.1
+  published: '2023-03-31'
+- language: javascript
+  registry: cdn
+  name: Evolv JavaScript SDK (hosted build)
+  url: https://media.evolv.ai/javascript-sdk/releases/latest/
+  docs: https://media.evolv.ai/javascript-sdk/releases/latest/docs/EvolvClient.html
+  description: >-
+    The browser build and API reference Evolv serves from its own CDN, which is what the
+    web snippet loads.
+  official: true
+  version: null
+  published: null
+  note: >-
+    Checked, nothing to pin: the distribution path is `/releases/latest/`, an unpinned
+    alias that floats to whatever Evolv publishes. There is no version in the URL and no
+    CDN metadata endpoint for this host, so a consumer cannot tell which build they are
+    executing either — that ambiguity is the finding, not a gap in this record.
+currency_summary: >-
+  Nine of the thirteen first-party distributions were last published in 2023 or earlier.
+  The flagship @evolv/client stable tag is from 2024-08-26 and all subsequent work sits on
+  an alpha tag. The Android SDK has no versioned artifact at all. Evolv's GitHub
+  organisation is still active (commits through 2026-06), so this is a release-discipline
+  gap rather than an abandoned platform: the work is happening, but it is not reaching the
+  registries consumers install from.
 notes: >-
-  Additional first-party analytics adapters are published under the @evolv-integrations
-  npm scope (segment, adobe-analytics, google-analytics, ga4, heap, quantum-metric, etc.).
-  No first-party package was found on PyPI (the PyPI "evolv" package is an unrelated project).
+  Versions and dates read from registry metadata endpoints (registry.npmjs.org,
+  data.jsdelivr.com, repo.packagist.org) and, where no registry serves the package, from
+  git tags via api.github.com. No first-party package exists on PyPI, Maven Central,
+  NuGet, RubyGems, pkg.go.dev or crates.io.

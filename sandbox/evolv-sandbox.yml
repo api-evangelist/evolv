@@ -1,25 +1,46 @@
-generated: '2026-07-19'
-method: searched
-source: evolv-ai/android-sdk EvolvConfig.java (PROD_DOMAIN / TEST_DOMAIN constants)
+generated: '2026-08-13'
+method: probed
+source: >-
+  evolv-ai/android-sdk EvolvConfig.java (PROD_DOMAIN / TEST_DOMAIN constants) + live probes
+  of both hosts
+checked: '2026-08-13'
 environments:
 - mode: production
   domain: participants.evolv.ai
   endpoint: https://participants.evolv.ai/v1
   description: Production Participant API host used by default across all Evolv SDKs.
+  verified: true
+  evidence: >-
+    GET https://participants.evolv.ai/v1/test/allocations -> 404 application/json
+    {"msg":"Not found"} (probed 2026-08-13)
 - mode: staging
   domain: participants-stg.evolv.ai
   endpoint: https://participants-stg.evolv.ai/v1
   description: >-
-    Staging/test Participant API host (TEST_DOMAIN in the SDK config). SDKs can be
-    pointed at this host to exercise experiment allocation and event ingestion against a
+    Staging/test Participant API host (TEST_DOMAIN in the SDK config). SDKs can be pointed
+    at this host to exercise experiment allocation and event ingestion against a
     non-production environment.
+  verified: true
+  evidence: >-
+    Resolves in DNS (13.33.109.x, CloudFront) and GET
+    https://participants-stg.evolv.ai/v1/test/allocations -> 404 application/json
+    {"msg":"Not found"} — the staging host is live and answering with the same routed API,
+    not parked. (probed 2026-08-13)
 selection:
   how: >-
     The target host is selected by SDK configuration — override the endpoint/domain to the
     staging host, and use a test/staging environment id for the project. Evolv does not
     publish magic test identifiers or test cards (it is not a payments API); test isolation
     is achieved via a separate environment id and the staging host.
+test_values_published: false
+console:
+  url: https://app.evolv.ai
+  status: 200
+  detail: >-
+    The Evolv Manager console is where experiments are authored and where a staging
+    environment id comes from. It is login-gated; no anonymous playground or try-it console
+    is published.
 notes: >-
-  No published test cards / hosted test tokens apply to this domain. Values above are the
-  real host constants shipped verbatim in the official Evolv SDKs; no test values were
-  invented.
+  No published test cards, magic identifiers or hosted test tokens apply to this domain.
+  The host constants above are the real values shipped verbatim in the official Evolv SDKs
+  and were each confirmed live on 2026-08-13; no test values were invented.

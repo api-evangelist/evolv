@@ -1,0 +1,43 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  https://developers.evolv.ai/ (Evolv's published Participant API documentation) plus live
+  unauthenticated responses from https://participants.evolv.ai/v1/...
+limit_count: 0
+limits: []
+headers_observed: []
+status_on_exhaustion: null
+retry_after: false
+detail: >-
+  Evolv publishes no rate limits for the Participant API. The developer portal
+  (a Postman documenter at developers.evolv.ai) documents seven operations across
+  allocations, events, preallocations and configuration, and none of them mentions a quota,
+  a throttle, a burst allowance or a 429 response. Live responses were inspected for
+  runtime signalling and carry none: a 404 from
+  https://participants.evolv.ai/v1/test/allocations returned only
+  `content-type`, `access-control-allow-origin`, `access-control-allow-credentials`,
+  `cache-control`, `pragma`, `expires` and CloudFront's `x-cache`/`via`/`x-amz-cf-id` —
+  no `X-RateLimit-*`, no `RateLimit-*`, no `Retry-After`. An agent calling this API has no
+  way to learn its budget before or after exhausting it.
+throttling_note: >-
+  Evolv does document "throttling", but it is an experiment concept, not a transport one:
+  the allocations endpoint "respects experiment throttling and audience filters", meaning a
+  participant may be excluded from an experiment (`excluded: true` in the allocation
+  record) rather than rate-limited. That is a sampling control, not an API rate limit, and
+  it is recorded here only so the two are not confused.
+evidence:
+- url: https://developers.evolv.ai/
+  status: 200
+  finding: >-
+    Full published API reference; no rate limit, quota or 429 documented on any of the
+    seven operations.
+- url: https://participants.evolv.ai/v1/test/allocations
+  status: 404
+  finding: No rate-limit headers of any family present on the response.
+- url: https://participants.evolv.ai/v1/test/preallocations?count=2
+  status: 500
+  finding: No rate-limit headers present.
+checked: '2026-08-13'
+notes: >-
+  An honest zero. Absence recorded from both the documentation and the live response
+  headers; nothing was assumed from the vendor category.

@@ -1,0 +1,161 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTPS probes of every Evolv host named in apis.yml plus the console host
+summary: >-
+  No /.well-known/ document is served on any Evolv host. The apex and www marketing site
+  is currently a Squarespace "Private Site" answering HTTP 401 to every path; the docs
+  host (a Postman documenter) 404s every well-known path; the Participant API host is a
+  CloudFront/S3 origin that 403s anything outside its routed /v1/ prefix; and the console
+  host app.evolv.ai is a single-page app that answers HTTP 200 with the same HTML shell
+  for every path, which is NOT a document. No WellKnown or SecurityTxt pointer is emitted.
+checked: '2026-08-13'
+probes:
+- host: www.evolv.ai
+  results:
+  - path: /.well-known/security.txt
+    status: 301
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 301
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    file: null
+  - path: /.well-known/api-catalog
+    status: 301
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 301
+    file: null
+  - path: /.well-known/agent.json
+    status: 301
+    file: null
+  - path: /llms.txt
+    status: 301
+    file: null
+  note: >-
+    Every /.well-known/* path 301-redirects to the apex, which then answers 401
+    ("Private Site" Squarespace lock screen).
+- host: evolv.ai
+  results:
+  - path: /.well-known/security.txt
+    status: 401
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 401
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+    file: null
+  - path: /.well-known/api-catalog
+    status: 401
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 401
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 401
+    file: null
+  - path: /.well-known/agent.json
+    status: 401
+    file: null
+  - path: /llms.txt
+    status: 401
+    file: null
+  - path: /robots.txt
+    status: 401
+    file: null
+  note: Apex serves a Squarespace password lock screen (HTTP 401) for every path.
+- host: developers.evolv.ai
+  results:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+  - path: /llms.txt
+    status: 404
+    file: null
+  - path: /robots.txt
+    status: 404
+    file: null
+  note: >-
+    Postman documenter host (custom domain for documenter.getpostman.com); it serves the
+    published Evolv collection and 404s everything else.
+- host: participants.evolv.ai
+  results:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+  - path: /llms.txt
+    status: 403
+    file: null
+  - path: /robots.txt
+    status: 403
+    file: null
+  note: >-
+    CloudFront in front of an S3 origin; unrouted paths return an S3
+    <Error><Code>AccessDenied</Code> XML body with HTTP 403.
+- host: app.evolv.ai
+  results:
+  - path: /.well-known/security.txt
+    status: 200
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: null
+  - path: /.well-known/agent.json
+    status: 200
+    file: null
+  - path: /llms.txt
+    status: 200
+    file: null
+  - path: /robots.txt
+    status: 200
+    file: null
+  note: >-
+    FALSE POSITIVE — the Evolv Manager console is a single-page app whose catch-all
+    returns HTTP 200 with the identical `<!doctype html>` shell for every path, including
+    paths that do not exist. None of these 200s carries a document, so none is recorded
+    as a hit and no pointer is emitted.
+pointers_emitted: []

@@ -1,0 +1,37 @@
+generated: '2026-08-13'
+method: searched
+source: https://www.evolv.ai/pricing
+plan_count: 0
+plans: []
+model: enterprise-contact-sales
+currency: null
+free_tier: false
+trial: false
+detail: >-
+  Evolv AI publishes no plan or price list. Pricing is enterprise, quote-based, and gated
+  behind a sales conversation — third-party software directories that track the vendor
+  (Capterra, G2, TrustRadius, SoftwareSuggest) all record "no pricing available / contact
+  vendor", and describe the commercial model as packages or a-la-carte features negotiated
+  per customer. There is no self-serve signup, no published tier, and no usage/overage
+  schedule for the Participant API.
+access_note: >-
+  As of this check the pricing page could not be read at all: the entire evolv.ai marketing
+  site is a Squarespace "Private Site" answering HTTP 401 to every path, including
+  /pricing, /terms, /privacy and /contact. So the zero above is doubly true — Evolv
+  published no plans, and right now it publishes no marketing site either.
+evidence:
+- url: https://www.evolv.ai/pricing
+  status: 401
+  finding: Squarespace "Private Site" password lock screen, not a pricing page.
+- url: https://www.evolv.ai/
+  status: 401
+  finding: Apex marketing site is password-protected; 301 -> 401 on every path.
+- url: https://app.evolv.ai/
+  status: 200
+  finding: >-
+    The Evolv Manager console loads (login required), confirming the platform itself is
+    live even though the marketing site is locked.
+checked: '2026-08-13'
+notes: >-
+  plan_count is 0 because Evolv publishes none — this is a recorded absence, not a missing
+  check. No price, tier name, quota or overage figure has been invented.

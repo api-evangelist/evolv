@@ -1,0 +1,40 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  postman/evolv-participant-api.postman_collection.json (Evolv-published collection) +
+  conventions/evolv-conventions.yml + errors/evolv-problem-types.yml
+api: Evolv Participant API
+base_url: https://participants.evolv.ai/v1
+grounding: >-
+  Evolv publishes no OpenAPI. Every request line, query parameter, body field, status code
+  and response shape referenced in these skills is taken verbatim from Evolv's own
+  published Postman collection (developers.evolv.ai, collection id
+  461304-d0fb7a20-1216-4418-b692-ff7630020b34) or from live probes of
+  participants.evolv.ai recorded in errors/evolv-problem-types.yml. No endpoint, parameter
+  or field was invented.
+skills:
+- file: evolv-allocate-participant.md
+  name: evolv-allocate-participant
+  description: >-
+    Boot a participant into Evolv's running experiments and read back the variant
+    configuration (genome) to apply.
+  operations:
+  - GET /v1/{environment_id}/configuration
+  - POST /v1/{environment_id}/allocations
+  - GET /v1/{environment_id}/allocations
+- file: evolv-record-events.md
+  name: evolv-record-events
+  description: >-
+    Record confirmations, contaminations and conversions against a participant's
+    allocation, individually or as a batch, and record a conversion on a link click.
+  operations:
+  - GET /v1/{environment_id}/events
+  - POST /v1/{environment_id}/events
+  - PATCH /v1/{environment_id}/events
+- file: evolv-offline-preallocations.md
+  name: evolv-offline-preallocations
+  description: >-
+    Pull a bulk set of preallocations for offline or server-side assignment where the
+    participant is not known at request time.
+  operations:
+  - GET /v1/{environment_id}/preallocations

@@ -1,27 +1,155 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: derived
 status: candidate
 source: >-
-  Derived from the Evolv Participant API operations exposed by the official SDKs
-  (evolv-ai/javascript-sdk, evolv-ai/android-sdk). No official hosted Evolv MCP server
-  was located.
+  Derived from the seven operations Evolv publishes in its own Postman collection
+  (postman/evolv-participant-api.postman_collection.json, developers.evolv.ai). No official
+  hosted or local Evolv MCP server was located.
+checked: '2026-08-13'
 server:
   name: evolv
   transport: http
   url: null
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: derived
+  tools: 7
+  checked: '2026-08-13'
+  note: >-
+    Nobody ships an MCP server for Evolv — not remote, not stdio. Searched the evolv-ai
+    GitHub organisation (28 public repos, none MCP-related), npm (@evolv and
+    @evolv-integrations scopes), and the web. mcp.evolv.ai does not resolve. The tools below
+    are a candidate wrapper we derived, and `mode: none` says exactly that: there is no
+    endpoint an agent can call and no package a human can install.
+search_evidence:
+- surface: github.com/evolv-ai
+  result: 28 public repositories, none MCP-related.
+- surface: https://mcp.evolv.ai
+  result: DNS does not resolve.
+- surface: npm @evolv / @evolv-integrations scopes
+  result: No MCP server package.
+- surface: https://developers.evolv.ai/
+  status: 200
+  result: Participant API reference only; no MCP endpoint documented.
 tools:
-- name: get_configuration
-  description: Fetch the experiment/variant configuration for a participant in an environment.
-  source_operation: "GET https://participants.evolv.ai/v1/{environment}/{uid}/configuration.json"
-- name: get_allocations
-  description: Fetch a participant's experiment allocations.
-  source_operation: "GET https://participants.evolv.ai/v1/{environment}/{uid}/{eid}/allocations"
-- name: submit_events
+- name: get_environment_configuration
   description: >-
-    Ingest participant context, confirmations, contaminations and behavioral events via
-    the beacon/data endpoint.
-  source_operation: "POST https://participants.evolv.ai/v1/{environment}/data"
+    Fetch the whole environment document for an Evolv project — every experiment, its
+    candidates, allocation probabilities and genomes.
+  source_operation: GET https://participants.evolv.ai/v1/{environment_id}/configuration
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+- name: get_participant_allocations
+  description: Read the experiments and variants a participant is currently allocated to.
+  source_operation: GET https://participants.evolv.ai/v1/{environment_id}/allocations
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: uid
+    in: query
+    required: true
+  - name: sid
+    in: query
+    required: false
+- name: allocate_participant
+  description: >-
+    Allocate a participant into the experiments they are eligible for, respecting experiment
+    throttling and audience filters. Returns candidate allocations; membership begins only on
+    a confirmation event.
+  source_operation: POST https://participants.evolv.ai/v1/{environment_id}/allocations
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: uid
+    in: body
+    required: true
+  - name: sid
+    in: body
+    required: false
+- name: record_event
+  description: >-
+    Record a single event against a participant — confirmation, contamination, conversion or
+    a custom type — with an optional numeric score.
+  source_operation: >-
+    GET or POST https://participants.evolv.ai/v1/{environment_id}/events
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: type
+    in: query-or-body
+    required: true
+  - name: uid
+    in: query-or-body
+    required: true
+  - name: sid
+    in: query-or-body
+    required: false
+  - name: eid
+    in: query-or-body
+    required: false
+  - name: cid
+    in: query-or-body
+    required: false
+  - name: score
+    in: query-or-body
+    required: false
+- name: record_event_and_redirect
+  description: >-
+    Record an event and 302 to a target URL, so a link click can convert and navigate
+    without JavaScript.
+  source_operation: >-
+    GET https://participants.evolv.ai/v1/{environment_id}/events?...&target={url}
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: type
+    in: query
+    required: true
+  - name: uid
+    in: query
+    required: true
+  - name: target
+    in: query
+    required: true
+- name: record_event_batch
+  description: Record an array of events in one request (JSON body).
+  source_operation: PATCH https://participants.evolv.ai/v1/{environment_id}/events
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: events
+    in: body
+    required: true
+    shape: 'array of {type, eid, cid, uid, sid, score}'
+- name: get_preallocations
+  description: >-
+    Bulk-mint preallocations for offline or server-side assignment where the participant is
+    not yet known.
+  source_operation: GET https://participants.evolv.ai/v1/{environment_id}/preallocations
+  inputs:
+  - name: environment_id
+    in: path
+    required: true
+  - name: count
+    in: query
+    required: true
+  - name: eid
+    in: query
+    required: false
 notes: >-
-  Candidate tool list only — a starting point for wrapping the Participant API as MCP.
-  Not an Evolv-published server. No OpenAPI is available, so tools are grounded in the
-  documented SDK request surface rather than operationIds.
+  Candidate tool list only — a starting point for wrapping the Participant API as MCP, not
+  an Evolv-published server. Evolv publishes no OpenAPI, so tools are grounded in the
+  request lines, parameters and bodies of Evolv's own published Postman collection rather
+  than in operationIds. No tool crosswalk is emitted: a crosswalk binds MCP tools to backing
+  OpenAPI operationIds, and there is neither a real MCP server nor an OpenAPI here to bind.

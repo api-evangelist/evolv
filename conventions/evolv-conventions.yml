@@ -1,55 +1,159 @@
-generated: '2026-07-19'
-method: derived
+generated: '2026-08-13'
+method: searched
 source: >-
-  Evolv SDK source (evolv-ai/javascript-sdk, evolv-ai/android-sdk) + developers.evolv.ai
-  Participant API reference
+  Evolv-published Postman collection at developers.evolv.ai
+  (postman/evolv-participant-api.postman_collection.json) + live probes of
+  https://participants.evolv.ai/v1/... + Evolv SDK source (evolv-ai/javascript-sdk,
+  evolv-ai/android-sdk)
 conventions:
   authentication:
     style: public-environment-id
     detail: >-
-      Requests are scoped by a public environment id and a participant uid carried in the
-      URL path; no bearer token or OAuth. See authentication/evolv-authentication.yml.
+      Requests are scoped by a public environment id carried in the URL path; the
+      participant uid/sid identify the subject. Evolv's own collection additionally declares
+      collection-level bearer auth whose issuance is undocumented. See
+      authentication/evolv-authentication.yml.
   versioning:
     style: uri-path
     current: v1
-    detail: The API version is a path segment (/v1/...). Default version in all SDKs is 1.
+    detail: >-
+      The API version is a path segment (/v1/...), carried in the collection as the
+      {{participant_api_version}} variable. Default version in all SDKs is 1. No version
+      negotiation header, no dated versions, no published version deprecation policy.
   transport:
     protocol: https
     default_host: participants.evolv.ai
-    formats:
+    staging_host: participants-stg.evolv.ai
+    edge: >-
+      CloudFront. Responses carry x-cache / via / x-amz-cf-id. The configuration route is
+      served from an S3 origin behind the same edge, which is why its error content type
+      differs from the routed endpoints.
+    request_formats:
+    - application/x-www-form-urlencoded
     - application/json
-  request_shape:
+    response_formats:
+    - application/json
+    detail: >-
+      A mixed content-type API. The single-event write and the allocation write take
+      x-www-form-urlencoded bodies; only the batch route takes JSON. Reads return JSON.
+  cors:
+    enabled: true
+    detail: >-
+      Every observed response — including error responses — carries
+      `access-control-allow-origin: *` and `access-control-allow-credentials: true`,
+      because the API is designed to be called from the browser by the JavaScript SDK.
+  caching:
+    detail: >-
+      Routed responses are returned with `cache-control: no-cache, no-store,
+      must-revalidate`, `pragma: no-cache` and `expires: 0`. The configuration document is
+      the exception — it is an S3 object served with ETag / Last-Modified / age, so it is
+      the one Evolv payload that is genuinely cacheable.
+  operations:
     configuration:
       method: GET
-      path: /v1/{environment}/{uid}/configuration.json
-      purpose: Fetch the experiment/variant configuration for a participant.
-    allocations:
+      path: /v1/{environment_id}/configuration
+      purpose: Fetch the whole environment document — _experiments[] with _candidates[] and genomes.
+    get_allocations:
       method: GET
-      path: /v1/{environment}/{uid}/{eid}/allocations
-      purpose: Fetch a participant's experiment allocations.
-    events:
+      path: /v1/{environment_id}/allocations
+      query:
+      - uid
+      - sid
+      purpose: Read the experiments a participant is currently participating in.
+    post_allocations:
       method: POST
-      path: /v1/{environment}/data
+      path: /v1/{environment_id}/allocations
+      body: application/x-www-form-urlencoded (uid required, sid optional)
       purpose: >-
-        The "beacon"/data endpoint — ingest participant context, confirmations,
-        contaminations, and behavioral events. Fire-and-forget event ingestion.
+        Allocate a participant into current experiments. Returns candidate allocations the
+        participant *would* receive; membership begins only on a confirmation event.
+        Respects experiment throttling and audience filters.
+    get_events:
+      method: GET
+      path: /v1/{environment_id}/events
+      query:
+      - type
+      - eid
+      - cid
+      - uid
+      - sid
+      - score
+      - target
+      purpose: >-
+        Beacon-style single event write. With `target` present the API records the event and
+        302s to that URL, so a link click can convert and navigate without JavaScript.
+    post_events:
+      method: POST
+      path: /v1/{environment_id}/events
+      body: application/x-www-form-urlencoded (type, uid required; sid, score optional)
+      purpose: Single event write as a form post.
+    patch_events:
+      method: PATCH
+      path: /v1/{environment_id}/events
+      body: application/json (array of event objects)
+      purpose: >-
+        Batch event ingestion. Note the verb — batching is PATCH, not POST, which is the one
+        place this API departs from the obvious shape.
+    preallocations:
+      method: GET
+      path: /v1/{environment_id}/preallocations
+      query:
+      - eid
+      - count
+      purpose: >-
+        Bulk-mint preallocations for offline use. With `eid`, returns `count` for that
+        experiment; without it, returns `count` for *each* experiment in the environment.
+  event_semantics:
+    reserved_types:
+    - name: confirmation
+      meaning: Registers the participant as active on an experiment / candidate.
+    - name: contamination
+      meaning: Excludes the participant from being counted in an experiment / candidate.
+    detail: >-
+      `type` is otherwise free-form; `conversion` and custom names are ordinary outcome
+      signal. Writes return 202 Accepted with an empty body — accepted for processing, not
+      confirmed recorded. There is no event id, no receipt, and no read-back.
   idempotency:
     supported: false
+    header: null
     detail: >-
-      No idempotency-key header or contract is documented for the Participant API. Event
-      ingestion is fire-and-forget via the beacon; configuration/allocation reads are safe
-      GETs. No Idempotency pointer is emitted.
+      No idempotency key, no de-duplication contract, and no request-id echo anywhere on the
+      Participant API. Every accepted event is a new event, so a blind retry after a timeout
+      double-counts a conversion and skews the optimization the platform is running. Reads
+      are safe GETs. No Idempotency pointer is emitted, because the support does not exist.
   pagination:
     supported: false
-    detail: Runtime edge API returns per-participant documents; no list pagination.
-  error_envelope:
     detail: >-
-      No RFC 9457 problem+json envelope is documented; standard HTTP status codes apply.
-      No OpenAPI is published to derive a structured error catalog, so errors/ is omitted
-      rather than fabricated.
+      Runtime edge API. Every response is a whole document — one participant's allocations,
+      one environment's configuration, or a `count`-sized batch of preallocations. `count`
+      on preallocations is a sizing control, not a cursor.
+  field_expansion:
+    supported: false
+    detail: No expand/fields/sparse-fieldset parameters on any operation.
+  request_tracing:
+    supported: false
+    detail: >-
+      No request id or correlation id is issued or echoed. CloudFront's `x-amz-cf-id` is the
+      only per-request handle, and it identifies the edge request, not the API operation.
+  error_envelope:
+    format: custom-json
+    shape: '{"msg": "<message>"}'
+    detail: >-
+      Not RFC 9457. A single free-text `msg` string with no code, type URI or details array —
+      the HTTP status is the only machine-readable signal. The configuration route is the
+      exception and returns S3 XML on 403. See errors/evolv-problem-types.yml.
   rate_limiting:
-    detail: No published rate-limit signaling headers were located.
+    signalled: false
+    detail: >-
+      No X-RateLimit-*, RateLimit-* or Retry-After headers on any observed response, and no
+      published limits. Note that Evolv's documented "throttling" is an experiment sampling
+      control (a participant comes back `excluded: true`), not a transport rate limit. See
+      rate-limits/evolv-rate-limits.yml.
 cross_links:
   authentication: authentication/evolv-authentication.yml
+  errors: errors/evolv-problem-types.yml
+  rate_limits: rate-limits/evolv-rate-limits.yml
   lifecycle: lifecycle/evolv-lifecycle.yml
   sandbox: sandbox/evolv-sandbox.yml
+  data_model: data-model/evolv-data-model.yml
+  contract: postman/evolv-participant-api.postman_collection.json

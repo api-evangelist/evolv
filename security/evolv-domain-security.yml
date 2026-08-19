@@ -1,11 +1,11 @@
-generated: '2026-07-19'
+generated: '2026-08-13'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: www.evolv.ai
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 13 20:30:47 2026 GMT
+  cert_expires: Nov  7 19:54:05 2026 GMT
   hsts: null
 - host: developers.evolv.ai
   https: true
@@ -16,14 +16,14 @@ hosts:
 - host: participants.evolv.ai
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 16 23:59:59 2026 GMT
+  cert_expires: Feb  1 23:59:59 2027 GMT
   hsts: null
 domains:
 - domain: evolv.ai
   dnssec: false
   caa:
-  - 0 issue "amazon.com"
   - 0 issue "letsencrypt.org"
+  - 0 issue "amazon.com"
   spf: true
   dmarc: true
   dmarc_policy: quarantine
