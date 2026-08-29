@@ -8,6 +8,17 @@ description: >-
   configurations, and ingest behavioral events so AI-driven optimization can evolve web
   and app experiences without manual A/B-test management. Enterprises use Evolv AI to
   automate conversion-rate optimization and personalization across their digital properties.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
