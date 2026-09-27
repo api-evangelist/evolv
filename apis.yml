@@ -162,3 +162,10 @@ x-enrichment:
     rounds had missed. Probed the live Participant API for its real error envelope and
     header behaviour. Recorded that the evolv.ai marketing site now answers HTTP 401
     (Squarespace "Private Site") on every path while the API, docs and console stay live.
+x-lifecycle:
+  state: shuttered
+  reason: domain-does-not-resolve
+  observed: '2026-09-27'
+  detail: >-
+    The company's own domain returned no A or AAAA record when probed. This is an observation about the domain, not a request from the company.
+  indexed: false
