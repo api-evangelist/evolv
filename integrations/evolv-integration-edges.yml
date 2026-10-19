@@ -1,0 +1,94 @@
+edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@evolv-integrations/adobe-analytics
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@evolv-integrations/adobe-analytics'
+      version: 1.2.0
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv-integrations/adobe-analytics
+      repo_leg: github-org:evolv-ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    - name: '@evolv-integrations/heap'
+      version: 1.1.2
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv-integrations/heap
+      repo_leg: github-org:evolv-ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    - name: '@evolv-integrations/quantum-metric'
+      version: 1.1.1
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv-integrations/quantum-metric
+      repo_leg: github-org:evolv-ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    - name: '@evolv-integrations/segment'
+      version: 1.2.0
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv-integrations/segment
+      repo_leg: github-org:evolv-ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    - name: '@evolv/client'
+      version: 2.11.1
+      released: '2026-03-04'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv/client
+      repo_leg: domain:evolv.ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    - name: '@evolv/react'
+      version: 1.2.0
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@evolv/react
+      repo_leg: github-org:evolv-ai
+      publisher_leg: email:evolv.ai
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+generated: '2026-10-18'
+method: searched
+source:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
+checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
